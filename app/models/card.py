@@ -26,10 +26,29 @@ class Card(db.Model):
 
     @classmethod
     def from_dict(cls, data: dict):
-        card = cls(
-                message=data["message"],
-                board_id=data["board_id"]
-        )
-        return card  
+        if "message" not in data:
+            raise KeyError("message")
 
-    
+        message = data["message"]
+        if message is None or not isinstance(message, str):
+            raise ValueError("message must be a string")
+
+        message = message.strip()
+        if message == "":
+            raise ValueError("message cannot be blank")
+        if len(message) > 40:
+            raise ValueError("message must be 40 characters or fewer")
+
+        if "board_id" not in data:
+            raise KeyError("board_id")
+        
+        try:
+            board_id = int(data["board_id"])
+        except (TypeError, ValueError):
+            raise ValueError("board_id must be an integer")
+        
+        card = cls(
+                message=message,
+                board_id=board_id
+        )
+        return card
