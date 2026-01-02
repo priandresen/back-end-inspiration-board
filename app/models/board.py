@@ -18,12 +18,9 @@ class Board(db.Model):
             "owner": self.owner,
         }
 
-
     @classmethod
     def from_dict(cls, data: dict):
         return cls(
                 title=data["title"],
                 owner=data["owner"]
             )
-
-    
