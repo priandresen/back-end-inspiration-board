@@ -8,9 +8,9 @@ if TYPE_CHECKING:
 
 class Card(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    message: Mapped[str] = mapped_column(Text, nullable=False)
-    likes_count: Mapped[int] = mapped_column(nullable=False, default=0)
-    board_id: Mapped[int] = mapped_column(ForeignKey("board.id"), nullable=False) 
+    message: Mapped[str] = mapped_column(Text)
+    likes_count: Mapped[int] = mapped_column(default=0)
+    board_id: Mapped[int] = mapped_column(ForeignKey("board.id")) 
     board: Mapped["Board"] = relationship(back_populates="cards")
 
 
