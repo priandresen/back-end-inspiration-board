@@ -7,8 +7,8 @@ if TYPE_CHECKING:
 
 class Board(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str] = mapped_column(String(200), nullable=False)
-    owner: Mapped[str] = mapped_column(String(100), nullable=False)
+    title: Mapped[str] = mapped_column(String(200))
+    owner: Mapped[str] = mapped_column(String(100))
     cards: Mapped[list["Card"]] = relationship(back_populates="board", cascade="all, delete-orphan")
 
     def to_dict(self) -> dict:
