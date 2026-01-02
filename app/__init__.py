@@ -21,6 +21,7 @@ def create_app(config=None):
     migrate.init_app(app, db)
 
     # Register Blueprints
+    
 
 
     CORS(app)
