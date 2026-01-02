@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import String
 from ..db import db
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -6,30 +7,23 @@ if TYPE_CHECKING:
 
 class Board(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    title: Mapped[str]
-    owner: Mapped[str]
+    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    owner: Mapped[str] = mapped_column(String(100), nullable=False)
+    cards: Mapped[list["Card"]] = relationship(back_populates="board", cascade="all, delete-orphan")
 
-    # def to_dict(self):
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "owner": self.owner,
+        }
 
-    #     goal_dict = {
-    #         "id": self.id,
-    #         "title": self.title
-    #     }
-    #     # if self.tasks:
-    #     #     goal_dict["tasks"] = [task.to_dict() for task in self.tasks]
 
-    #     return goal_dict
-    
-    # def to_dict_with_task(self):
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+                title=data["title"],
+                owner=data["owner"]
+            )
 
-    #     goal_dict_with_task = {
-    #         "id" : self.id,
-    #         "task_ids" : [task.id for task in self.tasks]
-    #     }
-
-    #     return goal_dict_with_task
-
-    # @classmethod
-    # def from_dict(cls, data):
-    #     return cls(title=data["title"])
     
