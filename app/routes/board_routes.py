@@ -1,5 +1,5 @@
 from flask import Blueprint, Response, request
-from app.models.card import Board
+from app.models.board import Board
 from .route_utilities import validate_model, create_model
 from ..db import db
 
