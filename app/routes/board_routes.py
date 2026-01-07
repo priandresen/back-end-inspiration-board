@@ -54,3 +54,13 @@ def delete_board(board_id):
     db.session.delete(board)
     db.session.commit()
     return Response(status=204, mimetype="application/json")
+
+
+@bp.delete("/<board_id>/cards")
+def delete_all_cards_in_board(board_id):
+    print(f"DELETE all cards called for board {board_id}")
+    board = validate_model(Board, board_id)
+    Card.query.filter_by(board_id=board.id).delete()
+    db.session.commit()
+    return Response(status=200, mimetype="application/json")
+
