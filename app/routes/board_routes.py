@@ -29,17 +29,24 @@ def create_board():
     return create_model(Board, request_body)
 
 @bp.post("/<board_id>/cards")
-def associate_card_with_board(board_id):
+def create_card_for_board(board_id):
     board = validate_model(Board, board_id)
     request_body = request.get_json()
 
-    for card_id in request_body.get("card_ids", []):
-        card = validate_model(Card, card_id)
-        board.cards.append(card)
-
+    message = request_body.get("message")
+    if not message:
+        return {"Request body must include 'message'."}, 400
+    
+    new_card = Card(
+        message=message,
+        board_id=board.id,
+        likes_count=0,
+    )
+    
+    db.session.add(new_card)
     db.session.commit()
 
-    return board.to_dict(), 200
+    return new_card.to_dict(), 201
 
 @bp.delete("/<board_id>")
 def delete_board(board_id):
