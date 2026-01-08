@@ -39,22 +39,22 @@ def client(app):
 # Model fixtures
 @pytest.fixture
 def one_saved_board(app):
-    board = Board(name="Test Board")
+    board = Board(name="Pricilla's Board")
     db.session.add(board)
     db.session.commit()
     return board
 
 @pytest.fixture
 def two_saved_boards(app):
-    board1 = Board(name="Test Board 1")
-    board2 = Board(name="Test Board 2")
+    board1 = Board(name="Anaiah's Board")
+    board2 = Board(name="Nadia's Board")
     db.session.add_all([board1, board2])
     db.session.commit()
     return board1, board2
 
 @pytest.fixture
 def one_saved_card(app, one_saved_board):
-    card = Card(message="This is a test card.", board_id=one_saved_board.id)
+    card = Card(message="YanYi is super smart.", board_id=one_saved_board.id)
     db.session.add(card)
     db.session.commit()
     return card
