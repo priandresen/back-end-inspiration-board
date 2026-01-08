@@ -73,8 +73,9 @@ def test_create_card_missing_message(client, one_saved_board):
     response = client.post(f"/boards/{board_id}/cards", json=request_body)
     data = response.get_json()
 
+
     assert response.status_code == 400
-    assert "Request body must include 'message'." in data.values()
+    assert data == {"details": "Missing field: message"}
 
 
 
