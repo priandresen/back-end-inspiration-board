@@ -10,7 +10,7 @@ import os
 load_dotenv()
 
 # App fixtures
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def app():
     test_config = {
         "TESTING": True,
