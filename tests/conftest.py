@@ -10,11 +10,12 @@ import os
 load_dotenv()
 
 # App fixtures
-@pytest.fixture
+@pytest.fixture(scope="session")
 def app():
     test_config = {
         "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": os.environ.get('SQLALCHEMY_TEST_DATABASE_URI')
+        "SQLALCHEMY_DATABASE_URI": os.environ.get('SQLALCHEMY_TEST_DATABASE_URI', 'sqlite:///:memory:'),
+        "SQLALCHEMY_TRACK_MODIFICATIONS": False,
     }
     app = create_app(test_config)
 
@@ -34,20 +35,24 @@ def app():
 def client(app):
     return app.test_client()
 
+@pytest.fixture(autouse=True)
+def push_app_context(app):
+        yield
+
 
 
 # Model fixtures
 @pytest.fixture
 def one_saved_board(app):
-    board = Board(name="Pricilla's Board")
+    board = Board(title="Pricilla's Board", owner="Pricilla")
     db.session.add(board)
     db.session.commit()
     return board
 
 @pytest.fixture
 def two_saved_boards(app):
-    board1 = Board(name="Anaiah's Board")
-    board2 = Board(name="Nadia's Board")
+    board1 = Board(title="Anaiah's Board", owner="Anaiah")
+    board2 = Board(title="Nadia's Board", owner="Nadia")
     db.session.add_all([board1, board2])
     db.session.commit()
     return board1, board2

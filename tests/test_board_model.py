@@ -14,7 +14,7 @@ def test_board_creation():
     board = Board.query.get(board.id)
     #Assert
     assert board.id is not None
-    assert board.id == board,id
+    assert board.id == board.id
     assert board.title == title
     assert board.owner == owner
 
