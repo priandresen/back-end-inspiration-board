@@ -42,7 +42,8 @@ def test_board_missing_owner_not_created(client):
 
 def test_board_to_dict(one_saved_board):
     #Arrange
-    board = one_saved_board
+    board_id = one_saved_board
+    board = Board.query.get(board_id)
     #Act
     board_dict = board.to_dict()
     #Assert
@@ -68,7 +69,8 @@ def test_board_from_dict():
 
 def test_board_has_two_cards(board_with_two_cards):
     # Arrange
-    board = board_with_two_cards  
+    board_id = board_with_two_cards  
+    board = Board.query.get(board_id)
     # Act
     cards = board.cards
     # Assert
@@ -80,7 +82,8 @@ def test_board_has_two_cards(board_with_two_cards):
 
 def test_cascade_delete_functionality(board_with_two_cards, app):
     # Arrange
-    board = board_with_two_cards
+    board_id = board_with_two_cards
+    board = Board.query.get(board_id)
     card_ids = [card.id for card in board.cards]
     # Act
     db.session.delete(board)
