@@ -47,7 +47,7 @@ def one_saved_board(app):
     board = Board(title="Pricilla's Board", owner="Pricilla")
     db.session.add(board)
     db.session.commit()
-    return board
+    return board.id
 
 @pytest.fixture
 def two_saved_boards(app):
@@ -66,10 +66,11 @@ def one_saved_card(app, one_saved_board):
 
 @pytest.fixture
 def board_with_two_cards(app, one_saved_board):
-    card1 = Card(message="This is the first test card.", board_id=one_saved_board.id)
-    card2 = Card(message="This is the second test card.", board_id=one_saved_board.id)
+    board_id = one_saved_board
+    card1 = Card(message="This is the first test card.", board_id=board_id)
+    card2 = Card(message="This is the second test card.", board_id=board_id)
     db.session.add_all([card1, card2])
     db.session.commit()
-    return one_saved_board
+    return board_id
 
 
