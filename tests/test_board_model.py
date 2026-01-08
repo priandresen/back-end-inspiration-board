@@ -1,6 +1,7 @@
 from app.models.board import Board
 from app.models.card import Card
 from app.db import db
+from sqlalchemy.exc import IntegrityError
 import pytest
 
 def test_board_creation():
@@ -23,18 +24,21 @@ def test_board_missing_title_not_created():
     board = Board(owner="Nesferatu")
     db.session.add(board)
     #Act
-    db.session.commit()
-    #Assert
-    assert board.id is None, "Board without title should not be created"
+    with pytest.raises(IntegrityError):
+        db.session.commit()
 
-def test_board_missing_owner_not_created():
-    #Arrange
-    board = Board(title="Spooky Board")
-    db.session.add(board)
-    #Act
-    db.session.commit()
+def test_board_missing_owner_not_created(client):
+    # #Arrange
+    # board = Board(title="Spooky Board")
+    # db.session.add(board)
+    # #Act
+    # db.session.commit()
+    # #Assert
+    # assert board.id is None, "Board without owner should not be created"
+    response = client.post("/boards", json={"title": "Spooky Board"})
     #Assert
-    assert board.id is None, "Board without owner should not be created"
+    response_data = response.get_json()
+    assert response.status_code == 400
 
 def test_board_to_dict(one_saved_board):
     #Arrange

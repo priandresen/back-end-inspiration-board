@@ -1,6 +1,6 @@
 from flask import Blueprint, Response, request
 from app.models.card import Card
-from .route_utilities import validate_model, create_model
+from .route_utilities import validate_model, create_model, get_models_with_filters
 from ..db import db
 
 bp = Blueprint("cards", __name__, url_prefix="/cards")
