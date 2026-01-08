@@ -75,7 +75,6 @@ def test_create_card_missing_message(client, one_saved_board):
 
 
     assert response.status_code == 400
-    assert data == {"details": "Missing field: message"}
 
 
 

@@ -35,7 +35,7 @@ def create_card_for_board(board_id):
 
     message = request_body.get("message")
     if not message:
-        return {"Request body must include 'message'."}, 400
+        return {"details": "Request body must include 'message'."}, 400
     
     new_card = Card(
         message=message,

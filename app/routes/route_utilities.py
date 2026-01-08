@@ -5,12 +5,11 @@ def validate_model(cls, model_id):
     try:
         model_id = int(model_id)
     except (TypeError, ValueError):
-        return abort(make_response({"message": f"{cls.__name__} id {model_id} invalid"}, 400))
+        abort(make_response({"message": f"{cls.__name__} id {model_id} invalid"}, 400))
     query = db.select(cls).where(cls.id == model_id)
     model = db.session.scalar(query)
     if not model:
-        return abort(make_response({"message": f"{cls.__name__} id {model_id} not found"}, 404))
-
+        abort(make_response({"message": f"{cls.__name__} id {model_id} not found"}, 404))
     return model
 
 
@@ -18,9 +17,10 @@ def create_model(cls, model_data):
     try:
         new_model = cls.from_dict(model_data)              
     except KeyError as e:
-        return abort(make_response({"details": f"Missing field: {e.args[0]}"}, 400))
+        abort(make_response({"details": f"Missing field: {e.args[0]}"}, 400))
+        
     except ValueError as e:
-        return abort(make_response({"details": str(e)}, 400))
+        abort(make_response({"details": str(e)}, 400))
     db.session.add(new_model)
     db.session.commit()
     return new_model.to_dict(), 201
