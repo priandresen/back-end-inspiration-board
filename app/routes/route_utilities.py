@@ -1,5 +1,4 @@
 from flask import abort, make_response
-from app.models.card import Card
 from ..db import db
 
 def validate_model(cls, model_id):
@@ -27,27 +26,24 @@ def create_model(cls, model_data):
     return new_model.to_dict(), 201
 
 def get_models_with_filters(cls, filters=None):
+
     query = db.select(cls)
 
     if filters:
         for attribute, value in filters.items():
+            if attribute == "sort":
+                continue
             if hasattr(cls, attribute):
                 query = query.where(getattr(cls, attribute).ilike(f"%{value}%"))
     
     if filters and filters.get("sort") == "asc":
         query = query.order_by(cls.title.asc())
-    if filters and filters.get("sort") == "desc":
+    elif filters and filters.get("sort") == "desc":
         query = query.order_by(cls.title.desc())
     else:
         query = query.order_by(cls.id)
     
     models = db.session.scalars(query).all()
     models_response = [model.to_dict() for model in models]
-    return models_response
 
-def apply_card_sort(query, sort):
-    if sort == "alpha":
-        return query.order_by(Card.message.asc())
-    if sort == "likes":
-        return query.order_by(Card.likes_count.desc(), Card.id.asc())
-    return query.order_by(Card.id.asc())
+    return models_response
