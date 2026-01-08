@@ -1,4 +1,5 @@
 from app.models.board import Board
+from app.models.card import Card
 from app.db import db
 import pytest
 
@@ -60,4 +61,29 @@ def test_board_from_dict():
     assert isinstance(board, Board)
     assert board.title == "Anaiah was here"
     assert board.owner == "Anaiah"
+
+def test_board_has_two_cards(board_with_two_cards):
+    # Arrange
+    board = board_with_two_cards  
+    # Act
+    cards = board.cards
+    # Assert
+    assert len(cards) == 2, "Board should have two cards"
+
+    for card in cards:
+        assert card.board_id == board.id, "Card's board_id should match the board's id"
+
+
+def test_cascade_delete_functionality(board_with_two_cards, app):
+    # Arrange
+    board = board_with_two_cards
+    card_ids = [card.id for card in board.cards]
+    # Act
+    db.session.delete(board)
+    db.session.commit()
+    # Assert
+    assert Board.query.get(board.id) is None, "Board should be deleted"
+
+    for card_id in card_ids:
+        assert Card.query.get(card_id) is None, "Card should be deleted when board is deleted"
     
