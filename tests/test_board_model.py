@@ -45,6 +45,7 @@ def test_board_to_dict(one_saved_board):
     board = one_saved_board
     #Act
     board_dict = board.to_dict()
+
     #Assert
     assert board_dict == {
         "id": board.id,
